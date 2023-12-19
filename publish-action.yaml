@@ -1,0 +1,39 @@
+name: Deploy FastAPI and React Applications
+
+on:
+  push:
+    branches:
+      - main  # Set your branch name here
+
+jobs:
+  build-and-deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout Repo
+      uses: actions/checkout@v2
+
+    - name: Login to GitHub Container Registry
+      uses: docker/login-action@v1
+      with:
+        registry: ghcr.io
+        username: ${{ secrets.ORG_USERNAME }}  # GitHub username
+        password: ${{ secrets.GHCR_TOKEN }}  # GitHub token
+
+    - name: Build and Push Docker Images
+      run: |
+        docker build -t ghcr.io/${{ secrets.ORG_USERNAME }}/${{ secrets.IMAGE_NAME }}:${{ secrets.IMAGE_TAG }} --build-arg ${{ secrets.MONGO_URL }} .
+        docker push ghcr.io/${{ secrets.ORG_USERNAME }}/${{ secrets.IMAGE_NAME }}:${{ secrets.IMAGE_TAG }}
+
+    - name: Deploy to Digital Ocean
+      uses: appleboy/ssh-action@master
+      with:
+        host: ${{ secrets.DROPLET_IP }}
+        username: root  # Or your droplet username
+        key: ${{ secrets.SSH_PRIVATE_KEY }}
+        script: |
+          docker login ghcr.io -u ${{ secrets.ORG_USERNAME }} -p ${{ secrets.GHCR_TOKEN }}
+          docker pull ghcr.io/${{ secrets.ORG_USERNAME }}/${{ secrets.IMAGE_NAME }}:${{ secrets.IMAGE_TAG }}
+          docker stop ${{ secrets.CONTAINER_NAME_BE }} || true
+          docker rm ${{ secrets.CONTAINER_NAME_BE }} || true
+          docker run -d --name ${{ secrets.CONTAINER_NAME_BE }} -p ${{ secrets.BE_EXTERNAL_PORT }}:${{ secrets.BE_INTERNAL_PORT }} ghcr.io/${{ secrets.ORG_USERNAME }}/${{ secrets.IMAGE_NAME }}:${{ secrets.IMAGE_TAG }}
