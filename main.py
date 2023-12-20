@@ -1,8 +1,8 @@
+import os
 from typing import List, Any
 
 from beanie import init_beanie
 from fastapi import FastAPI, APIRouter
-from decouple import config
 from starlette.middleware.cors import CORSMiddleware
 from starlette.requests import Request
 from starlette.responses import HTMLResponse
@@ -13,7 +13,7 @@ from models.user import User
 from repositories.base.db import MongoClient
 
 app = FastAPI(
-    title=config('PROJECT_NAME'), openapi_url="/openapi.json"
+    title="PuzzleApp", openapi_url="/openapi.json"
 )
 
 BACKEND_CORS_ORIGINS: List[Any] = [
@@ -28,7 +28,7 @@ app.include_router(root_router)
 
 @app.on_event("startup")
 async def startup_db_client():
-    mongo = MongoClient(config('DB_URL'), config('DB_NAME'))
+    mongo = MongoClient(os.getenv("MONGO_URL"), os.getenv("MONGO_DB_NAME"))
 
     await init_beanie(database=mongo.client[mongo.database_name],
                       document_models=[User, Puzzle])

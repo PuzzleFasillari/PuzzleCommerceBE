@@ -22,7 +22,7 @@ jobs:
 
     - name: Build and Push Docker Images
       run: |
-        docker build -t ghcr.io/${{ secrets.ORG_USERNAME }}/${{ secrets.IMAGE_NAME }}:${{ secrets.IMAGE_TAG }} --build-arg ${{ secrets.MONGO_URL }} .
+        docker build -t ghcr.io/${{ secrets.ORG_USERNAME }}/${{ secrets.IMAGE_NAME }}:${{ secrets.IMAGE_TAG }} --build-arg ${{ secrets.MONGO_URL }} --build-arg ${{ secrets.MONGO_DB_NAME }} .
         docker push ghcr.io/${{ secrets.ORG_USERNAME }}/${{ secrets.IMAGE_NAME }}:${{ secrets.IMAGE_TAG }}
 
     - name: Deploy to Digital Ocean
@@ -31,6 +31,7 @@ jobs:
         host: ${{ secrets.DROPLET_IP }}
         username: root  # Or your droplet username
         key: ${{ secrets.SSH_PRIVATE_KEY }}
+        passphrase: ${{ secrets.SSH_PASSPHRASE }}
         script: |
           docker login ghcr.io -u ${{ secrets.ORG_USERNAME }} -p ${{ secrets.GHCR_TOKEN }}
           docker pull ghcr.io/${{ secrets.ORG_USERNAME }}/${{ secrets.IMAGE_NAME }}:${{ secrets.IMAGE_TAG }}

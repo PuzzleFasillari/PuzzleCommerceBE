@@ -1,3 +1,5 @@
+import os
+
 import pytest
 from decouple import config
 
@@ -9,7 +11,7 @@ from services.user_service import UserService
 
 @pytest.mark.asyncio
 async def test_register_user_first_time():
-    mongo = MongoClient(config('DB_URL'), config('DB_NAME'))
+    mongo = MongoClient(os.getenv("MONGO_URL"), os.getenv("MONGO_DB_NAME"))
 
     user_repository = UserRepository(mongo)
     await user_repository.init()
@@ -24,7 +26,7 @@ async def test_register_user_first_time():
 
 @pytest.mark.asyncio
 async def test_register_user_with_same_username():
-    mongo = MongoClient(config('DB_URL'), config('DB_NAME'))
+    mongo = MongoClient(os.getenv("MONGO_URL"), os.getenv("MONGO_DB_NAME"))
 
     user_repository = UserRepository(mongo)
     await user_repository.init()
@@ -38,7 +40,7 @@ async def test_register_user_with_same_username():
 
 @pytest.mark.asyncio
 async def test_register_user_with_same_email():
-    mongo = MongoClient(config('DB_URL'), config('DB_NAME'))
+    mongo = MongoClient(os.getenv("MONGO_URL"), os.getenv("MONGO_DB_NAME"))
 
     user_repository = UserRepository(mongo)
     await user_repository.init()

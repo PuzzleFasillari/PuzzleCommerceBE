@@ -3,8 +3,10 @@ FROM python:3.9-slim
 WORKDIR /opt/puzzle-api
 
 ARG MONGO_URL
+ARG MONGO_DB_NAME
 
 ENV MONGO_URI=$MONGO_URL
+ENV MONGO_DB_NAME=$MONGO_DB_NAME
 
 ADD . /opt/puzzle-api
 

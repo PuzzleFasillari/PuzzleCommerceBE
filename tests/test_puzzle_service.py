@@ -1,20 +1,21 @@
-import pytest
-from decouple import config
+import os
 
+import pytest
+
+from enums.age_groups import AgeGroup
+from enums.difficulty_level import DifficultyLevel
+from enums.puzzle_material import PuzzleMaterials
+from enums.puzzle_size import PuzzleSize
+from enums.puzzle_theme import PuzzleTheme
+from enums.puzzle_types import PuzzleTypes
 from models.puzzle import Puzzle
 from repositories.base.db import MongoClient
 from repositories.puzzle_repository import PuzzleRepository
-from enums.puzzle_types import PuzzleTypes
-from enums.difficulty_level import DifficultyLevel
-from enums.puzzle_material import PuzzleMaterials
-from enums.puzzle_theme import PuzzleTheme
-from enums.puzzle_size import PuzzleSize
-from enums.age_groups import AgeGroup
 
 
 @pytest.mark.asyncio
 async def test_create_puzzle():
-    mongo = MongoClient(config('DB_URL'), config('DB_NAME'))
+    mongo = MongoClient(os.getenv("MONGO_URL"), os.getenv("MONGO_DB_NAME"))
 
     puzzle_repository = PuzzleRepository(mongo)
     await puzzle_repository.init()
@@ -44,7 +45,7 @@ async def test_create_puzzle():
 
 @pytest.mark.asyncio
 async def test_delete_puzzle():
-    mongo = MongoClient(config('DB_URL'), config('DB_NAME'))
+    mongo = MongoClient(os.getenv("MONGO_URL"), os.getenv("MONGO_DB_NAME"))
 
     puzzle_repository = PuzzleRepository(mongo)
     await puzzle_repository.init()
@@ -53,5 +54,4 @@ async def test_delete_puzzle():
 
     result = await puzzle_repository.delete_puzzle(str(founded_puzzle.id))
 
-    assert result == True
-
+    assert result is True
