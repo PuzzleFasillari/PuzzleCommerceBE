@@ -29,3 +29,8 @@ class IUserRepository(ABC):
     @abstractmethod
     async def get_user_by_username(username: str) -> Optional[User]:
         raise NotImplemented
+
+    @staticmethod
+    @abstractmethod
+    async def get_user_by_email(username: str) -> Optional[User]:
+        raise NotImplemented

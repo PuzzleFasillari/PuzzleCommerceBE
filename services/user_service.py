@@ -9,6 +9,18 @@ from repositories.user_repository import UserRepository
 class UserService(IUserService):
 
     @staticmethod
+    async def get_user_by_id(user_id: str) -> Optional[User]:
+        return await UserRepository.get_user_by_id(user_id)
+
+    @staticmethod
+    async def get_user_by_username(username: str) -> Optional[User]:
+        return await UserRepository.get_user_by_username(username)
+
+    @staticmethod
+    async def get_user_by_email(email: str) -> Optional[User]:
+        return await UserRepository.get_user_by_email(email)
+
+    @staticmethod
     async def create_user(user_data: UserCreate) -> User:
         username_exist = await UserRepository.get_user_by_username(user_data.username)
         email_exist = await UserRepository.get_user_by_email(user_data.email)
@@ -23,7 +35,8 @@ class UserService(IUserService):
             if created_user.id:
                 return created_user
 
-    async def login_user(self, user_data: UserLogin) -> Optional[User]:
+    @staticmethod
+    async def login_user(user_data: UserLogin) -> Optional[User]:
         user = await UserRepository.get_user_by_username(user_data.username)
 
         if user and verify_password(user_data.password, user.hashed_password):
