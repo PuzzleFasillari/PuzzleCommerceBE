@@ -41,8 +41,6 @@ async def login(form_data: UserLogin) -> Auth:
         )
     access_token = auth_service.create_token_for_user(user)
 
-    auth = Auth()
-
-    auth.access_token = access_token
+    auth = Auth(access_token = access_token)
 
     return auth
