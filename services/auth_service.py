@@ -7,11 +7,12 @@ from models.user import UserLogin
 from repositories.user_repository import UserRepository
 from services.interfaces.i_auth_service import IAuthService
 from services.user_service import UserService
+from utils.custom_http import CustomHTTPBearer
 from utils.jwt import JWTUtils
 
 
 class AuthService(IAuthService):
-    oauth2_scheme = OAuth2PasswordBearer(tokenUrl="token")
+    oauth2_scheme = CustomHTTPBearer()
     user_service = UserService()
 
     async def authenticate_user(self, user_data: UserLogin):
