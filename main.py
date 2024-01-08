@@ -8,6 +8,8 @@ from starlette.requests import Request
 from starlette.responses import HTMLResponse
 
 from controllers.user_controller import router as user_router
+from controllers.puzzle_controller import router as puzzle_controller
+
 from models.puzzle import Puzzle
 from models.user import User
 from repositories.base.db import MongoClient
@@ -23,6 +25,7 @@ BACKEND_CORS_ORIGINS: List[Any] = [
 root_router = APIRouter()
 
 app.include_router(user_router)
+app.include_router(puzzle_controller)
 app.include_router(root_router)
 
 

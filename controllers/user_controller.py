@@ -31,8 +31,7 @@ async def register_to_app(user_data: UserCreate) -> User:
 
 @router.post("/login")
 async def login(form_data: UserLogin) -> Auth:
-    user_data = UserLogin(username=form_data.username, password=form_data.password)
-    user = await auth_service.authenticate_user(user_data)
+    user = await auth_service.authenticate_user(form_data)
     if not user:
         raise HTTPException(
             status_code=status.HTTP_401_UNAUTHORIZED,
