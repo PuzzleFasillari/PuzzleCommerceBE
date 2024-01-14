@@ -1,6 +1,6 @@
 from typing import List
 
-from fastapi import APIRouter, Depends, HTTPException
+from fastapi import APIRouter, Depends, HTTPException, UploadFile, File, Body
 from starlette.status import HTTP_401_UNAUTHORIZED, HTTP_404_NOT_FOUND
 
 from models.user import User
@@ -14,11 +14,11 @@ auth_service = AuthService()
 
 
 @router.post("/create", response_model=Puzzle)
-async def create_puzzle(puzzle_data: Puzzle, current_user: User = Depends(auth_service.oauth2_scheme)):
+async def create_puzzle(puzzle_data: Puzzle = Body(...), file: UploadFile = File(...), current_user: User = Depends(auth_service.oauth2_scheme)):
     if not current_user:
         raise HTTPException(status_code=HTTP_401_UNAUTHORIZED, detail="User not authenticated")
 
-    return await PuzzleService.create_puzzle(puzzle_data)
+    return await PuzzleService.create_puzzle(puzzle_data, file)
 
 
 @router.get("/{puzzle_id}/detail", response_model=Puzzle)

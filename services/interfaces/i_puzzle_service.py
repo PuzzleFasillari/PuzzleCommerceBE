@@ -7,7 +7,7 @@ class IPuzzleService(ABC):
 
     @staticmethod
     @abstractmethod
-    async def create_puzzle(puzzle: Puzzle) -> Puzzle:
+    async def create_puzzle(puzzle: Puzzle, file_name: str) -> Puzzle:
         raise NotImplemented
 
     @staticmethod
