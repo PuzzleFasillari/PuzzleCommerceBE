@@ -22,7 +22,9 @@ jobs:
 
     - name: Build and Push Docker Images
       run: |
-        docker build -t ghcr.io/${{ secrets.ORG_USERNAME }}/${{ secrets.IMAGE_NAME }}:${{ secrets.IMAGE_TAG }} --build-arg MONGO_URL=${{ secrets.MONGO_URL }} --build-arg MONGO_DB_NAME=${{ secrets.MONGO_DB_NAME }} .
+        docker build -t ghcr.io/${{ secrets.ORG_USERNAME }}/${{ secrets.IMAGE_NAME }}:${{ secrets.IMAGE_TAG }} --build-arg MONGO_URL=${{ secrets.MONGO_URL }} --build-arg MONGO_DB_NAME=${{ secrets.MONGO_DB_NAME }} \
+        --build-arg BUCKET_NAME=${{ secrets.BUCKET_NAME }} --build-arg CDN_ACCESS_KEY_ID=${{ secrets.CDN_ACCESS_KEY_ID }} --build-arg CDN_BASE_URL=${{ secrets.CDN_BASE_URL }} --build-arg CDN_ENDPOINT_URL=${{ secrets.CDN_ENDPOINT_URL }}  
+        --build-arg CDN_REGION_NAME=${{ secrets.CDN_REGION_NAME }} --build-arg CDN_SECRET_ACCESS_KEY=${{ secrets.CDN_SECRET_ACCESS_KEY }}  .
         docker push ghcr.io/${{ secrets.ORG_USERNAME }}/${{ secrets.IMAGE_NAME }}:${{ secrets.IMAGE_TAG }}
 
     - name: Deploy to Digital Ocean
