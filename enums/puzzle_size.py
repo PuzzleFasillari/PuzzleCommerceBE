@@ -2,7 +2,7 @@ from enum import Enum
 
 
 class PuzzleSize(Enum):
-    SMALL = 100
-    MEDIUM = 500
-    LARGE = 1000
-    EXTRA_LARGE = 2000
+    SMALL: int = 100
+    MEDIUM: int = 500
+    LARGE: int = 1000
+    EXTRA_LARGE: int = 2000
